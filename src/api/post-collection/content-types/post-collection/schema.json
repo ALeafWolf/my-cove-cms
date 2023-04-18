@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "post_collections",
+  "info": {
+    "singularName": "post-collection",
+    "pluralName": "post-collections",
+    "displayName": "Post Collection"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "header_image": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "posts": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::post.post",
+      "mappedBy": "collection"
+    },
+    "summary": {
+      "type": "string"
+    }
+  }
+}

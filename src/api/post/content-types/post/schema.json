@@ -43,6 +43,12 @@
       "allowedTypes": [
         "images"
       ]
+    },
+    "collection": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::post-collection.post-collection",
+      "inversedBy": "posts"
     }
   }
 }
