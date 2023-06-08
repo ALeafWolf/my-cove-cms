@@ -9,14 +9,12 @@
     "build": "strapi build",
     "strapi": "strapi"
   },
-  "devDependencies": {},
   "dependencies": {
-    "@strapi/plugin-graphql": "4.9.1",
-    "@strapi/plugin-i18n": "4.9.1",
-    "@strapi/plugin-users-permissions": "4.9.1",
-    "@strapi/provider-upload-aws-s3": "^4.9.1",
-    "@strapi/strapi": "4.9.1",
-    "pg": "8.8.0",
+    "@strapi/plugin-i18n": "4.11.0",
+    "@strapi/plugin-users-permissions": "4.11.0",
+    "@strapi/provider-upload-aws-s3": "^4.11.0",
+    "@strapi/strapi": "4.11.0",
+    "pg": "^8.11.0",
     "pg-connection-string": "^2.5.0"
   },
   "author": {
@@ -26,7 +24,7 @@
     "uuid": "9f02d641-2435-475e-a321-704873fbf359"
   },
   "engines": {
-    "node": "18.x.x",
+    "node": ">=16.20.0",
     "npm": ">=6.0.0"
   },
   "license": "MIT"
