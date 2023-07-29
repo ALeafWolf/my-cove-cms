@@ -1,0 +1,38 @@
+{
+  "kind": "collectionType",
+  "collectionName": "mini_blogs",
+  "info": {
+    "singularName": "mini-blog",
+    "pluralName": "mini-blogs",
+    "displayName": "Mini Blog",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "content": {
+      "type": "text",
+      "maxLength": 500
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "media": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "videos"
+      ]
+    }
+  }
+}
