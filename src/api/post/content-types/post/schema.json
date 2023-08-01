@@ -49,6 +49,11 @@
       "relation": "manyToOne",
       "target": "api::post-collection.post-collection",
       "inversedBy": "posts"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     }
   }
 }
