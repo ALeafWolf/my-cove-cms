@@ -1,0 +1,38 @@
+name: Deploy my-cove-be
+
+# Auto-deploy to the DigitalOcean droplet (165.227.45.213) on every push to master.
+# GitHub's runner SSHes in (port 22, left open by the firewall lockdown) and runs the
+# same steps you'd run by hand.
+on:
+  push:
+    branches: [master]
+    paths-ignore:           # docs-only pushes don't need a redeploy
+      - '**.md'
+      - 'LICENSE'
+  workflow_dispatch:        # also lets you trigger a deploy manually from the Actions tab
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e   # fail the whole job if ANY command below errors (e.g. a broken build)
+            # nvm is NOT auto-loaded in a non-interactive SSH session — source it so
+            # `node`/`npm`/`pm2` are on PATH (this activates the default Node 16).
+            export NVM_DIR="$HOME/.nvm"
+            . "$NVM_DIR/nvm.sh"
+
+            cd ~/projects/my-cove/backend
+            git fetch origin
+            git reset --hard origin/master   # match the repo exactly (ignores .env, build/, node_modules — all gitignored)
+            npm install                      # committed lockfile exists; install is incremental (avoids npm ci wiping node_modules on the 2GB box)
+            NODE_ENV=production npm run build
+            # plain restart (no --update-env): keep the working env that .env/the running
+            # process already provide; we're only swapping in the freshly built admin.
+            pm2 restart my-cove-be
