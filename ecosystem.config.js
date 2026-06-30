@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "backend-my-cove",
+      name: "my-cove-be",
       cwd: ".",
       script: "npm",
       args: "start",
