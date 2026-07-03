@@ -112,7 +112,9 @@ exports
 *.cache
 dist
 build
+.strapi
 .strapi-updater.json
+types/generated
 my-cove-db
 db-backup
 ecosystem.config.js
