@@ -23,16 +23,19 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             set -e   # fail the whole job if ANY command below errors (e.g. a broken build)
-            # nvm is NOT auto-loaded in a non-interactive SSH session — source it so
-            # `node`/`npm`/`pm2` are on PATH (this activates the default Node 16).
+            # nvm is NOT auto-loaded in a non-interactive SSH session — source it, then select
+            # Node 20 (Strapi 5 requires >=20). The box's default nvm Node is 16, still used by
+            # the nxxtoolbox v4 app — don't change the default, just select 20 for this build.
             export NVM_DIR="$HOME/.nvm"
             . "$NVM_DIR/nvm.sh"
+            nvm use 20
 
             cd ~/projects/my-cove/backend
             git fetch origin
             git reset --hard origin/master   # match the repo exactly (ignores .env, build/, node_modules — all gitignored)
             npm install                      # committed lockfile exists; install is incremental (avoids npm ci wiping node_modules on the 2GB box)
             NODE_ENV=production npm run build
-            # plain restart (no --update-env): keep the working env that .env/the running
-            # process already provide; we're only swapping in the freshly built admin.
-            pm2 restart my-cove-be
+            # startOrReload re-reads ecosystem.config.js each deploy, so the Node 20 interpreter
+            # pinned there is always applied (a plain `pm2 restart <name>` would keep the stale
+            # Node 16 interpreter). ecosystem.config.js is gitignored on the box — pin Node 20 there.
+            pm2 startOrReload ecosystem.config.js --update-env
