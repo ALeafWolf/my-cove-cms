@@ -34,7 +34,9 @@ jobs:
             git fetch origin
             git reset --hard origin/master   # match the repo exactly (ignores .env, build/, node_modules — all gitignored)
             npm install                      # committed lockfile exists; install is incremental (avoids npm ci wiping node_modules on the 2GB box)
-            NODE_ENV=production npm run build
+            # 2 GB droplet: the Strapi 5 admin (Vite) build is memory-heavy — raise Node's heap
+            # ceiling and rely on the swapfile (see runbook) so it doesn't OOM mid-build.
+            NODE_OPTIONS=--max-old-space-size=1536 NODE_ENV=production npm run build
             # startOrReload re-reads ecosystem.config.js each deploy, so the Node 20 interpreter
             # pinned there is always applied (a plain `pm2 restart <name>` would keep the stale
             # Node 16 interpreter). ecosystem.config.js is gitignored on the box — pin Node 20 there.
